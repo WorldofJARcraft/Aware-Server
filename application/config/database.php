@@ -51,8 +51,8 @@ $active_record = TRUE;
 //Dashboard database
 $db['aware_dashboard']['hostname'] = 'localhost';
 $db['aware_dashboard']['port'] = '3306';
-$db['aware_dashboard']['username'] = 'YOUR_DB_USER';
-$db['aware_dashboard']['password'] = 'YOUR_DB_USER_PWD';
+$db['aware_dashboard']['username'] = 'aware';
+$db['aware_dashboard']['password'] = 'test';
 $db['aware_dashboard']['database'] = 'aware_dashboard'; //don't change me
 $db['aware_dashboard']['dbdriver'] = 'mysqli';
 $db['aware_dashboard']['dbprefix'] = '';

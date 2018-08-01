@@ -87,7 +87,7 @@ class Researcher_model extends CI_Model {
 
 		// Load default database
 		$aware_db = $this->load->database('aware_dashboard', TRUE);
-
+		echo $aware_db;
 		// Clean lastname
 		$lastname = str_replace(' ', '-', $this->session->userdata('last_name')); // Replaces all spaces with hyphens.
 		$lastname = preg_replace('/[^A-Za-z0-9\-]/', '', $lastname); // Removes special chars.
@@ -119,9 +119,15 @@ class Researcher_model extends CI_Model {
 		$row = $query->row();
 		$study_id = $row->id;
 
+		error_log("Study ID:",0);
+		error_log($study_id,0);
+
 		// If we're using default database, use database name forming: surname + _study_id
 		if ($database->hostname == $this->load->database('aware_dashboard', TRUE)->hostname) {
+			error_log("create study db with surname and study id", 0);
 			$db_name = $lastname . "_" . $study_id;
+			echo $db_name;
+			error_log($db_name,0);
 			$database->database = $db_name;
 			// Create database
 			$this->dbforge->create_database($db_name);

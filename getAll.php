@@ -29,7 +29,6 @@ if (mysqli_connect_errno()) {
 		  $out = $out."true";
 	  else
 		  $out = $out."false";
-	  
 	  $out = $out."\", \"name\":\"".$zeile["study_name"]."\", \"creator_id\":\""
         .$zeile["creator_id"]."\", \"created\":\"".$zeile["created"]."\", \"api_key\":\"".$zeile["api_key"]."\", \"mqtt_password\":\"".$zeile["mqtt_password"]."\"}";
     echo $out;
