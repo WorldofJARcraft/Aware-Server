@@ -224,7 +224,7 @@ $config['cache_path'] = '';
 | MUST set an encryption key.  See the user guide for info.
 |
 */
-$config['encryption_key'] = 'CHANGE_THIS_KEY';
+$config['encryption_key'] = 'J9VIQff6R7YslHjNtJYr';
 
 /*
 |--------------------------------------------------------------------------
@@ -268,7 +268,7 @@ $config['sess_time_to_update']	= 300;
 $config['cookie_prefix']	= "";
 $config['cookie_domain']	= "";
 $config['cookie_path']		= "/";
-$config['cookie_secure']	= FALSE;
+$config['cookie_secure']	= TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -368,14 +368,14 @@ $config['proxy_ips'] = '';
 |--------------------------------------------------------------------------
 | Path to Android SDK
 |*/
-$config['android_sdk'] = '/PATH/TO/android-sdk-linux/';
+$config['android_sdk'] = '/home/eklieme/android-sdk-linux/';
 
 /*
 |--------------------------------------------------------------------------
 | SSL public keys path
 |--------------------------------------------------------------------------
 */
-$config['public_keys'] = '/PATH/TO/public/';
+$config['public_keys'] = 'home/eklieme';
 
 /*
 |--------------------------------------------------------------------------
@@ -384,7 +384,7 @@ $config['public_keys'] = '/PATH/TO/public/';
 |
 | MQTT settings
 */
-$config['mqtt_hostname'] = 'YOUR_MOSQUITTO_IP';
+$config['mqtt_hostname'] = 'localhost';
 $config['mqtt_port'] = '1883';
 
 /*
@@ -395,8 +395,8 @@ $config['mqtt_port'] = '1883';
 | OAuth2 settings for Google login
 */
 
-$config['oauth_id'] = 'OAUTH_CLIENT_ID';
-$config['oauth_secret'] = 'OAUTH_CLIENT_SECRET';
+$config['oauth_id'] = '701004772458-bcs1v5c7kth0uuqk5m9mi3d3aspm4eqo.apps.googleusercontent.com';
+$config['oauth_secret'] = 'gr76FAO9VitnhB04l9db8LIC';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */
