@@ -275,7 +275,13 @@ class Researcher extends CI_Controller {
 
 			// Load default database
 			$database = $this->load->database('aware_dashboard', TRUE);
-			
+			error_log("Konfig:");
+			error_log ($database -> hostname);
+			error_log ($database -> port);
+			error_log ($database -> database);
+			error_log ($database -> username);
+			error_log ($database -> password);
+			error_log ("Konfig Ende");
 			// Validate database form
 			// Load custom database details
 			if ($this->input->post('host-type', true) == 'remote') {
@@ -310,7 +316,6 @@ class Researcher extends CI_Controller {
 				$database->database = $this->input->post('db_name', true);
 				$database->username = $this->input->post('db_username', true);
 				$database->password = $this->input->post('db_password', true);
-				
 				$connected = $this->Aware_model->check_database_connection($database);
 				if (!$connected) {
 					// Set host type to flash data session
@@ -330,9 +335,10 @@ class Researcher extends CI_Controller {
 				// Redirect to previous page with errors
 				redirect("researcher/new_study");
 			}
-
+			error_log("Zugriff!");
 			$success = $this->Researcher_model->insert_new_study($database, $this->session->userdata('id'), $this->input->post('study_name', true), $this->input->post('study_description', true));
 			if ($success == false) {
+				error_log("Fehler");
 				// Set host type to flash data session
 				$this->session->set_flashdata('host-type', 'remote');
 				// Set validation errors to flashdata session (only available for one server request)
@@ -340,7 +346,7 @@ class Researcher extends CI_Controller {
 				// Redirect to previous page with errors
 				redirect("researcher/new_study");	
 			}
-			
+			error_log("Alles gut!");
 			redirect('researcher/study/'.$success);
 
 		}
@@ -383,6 +389,8 @@ class Researcher extends CI_Controller {
 	public function update_study_configuration() {
 		$study_id = $this->input->post('study_id', true);
 		if($this->Researcher_model->check_study_privileges($study_id, $this->session->userdata('id')) || $this->session->userdata('manager')){
+			error_log("Konfig:");
+			error_log($this -> input -> post('config', true));
 			$config = str_replace(',', ';', $this->input->post('config', true));
 			$success = $this->Researcher_model->update_study_config($study_id, $config);
 			
@@ -620,6 +628,7 @@ class Researcher extends CI_Controller {
 	}
 
 	public function update_study_sensors() {
+		error_log("Updating sensors!");
 		$study_id = $this->input->post('study_id', true);
 		if($this->Researcher_model->check_study_privileges($study_id, $this->session->userdata('id')) || $this->session->userdata('manager')){
 			// Get sensors configurations
@@ -628,7 +637,8 @@ class Researcher extends CI_Controller {
 			// Get list of sensor setting that user have set
 			$user_sensors = array();
 			$config = json_decode($this->input->post("config", TRUE));
-
+			error_log("Sensors:");
+			error_log($config);
 			// Get lis of public plugins
 			$public_plugins = $this->Researcher_model->get_public_plugins_packages();
 			$user_plugins = array();
@@ -692,7 +702,8 @@ class Researcher extends CI_Controller {
 				// Get sensor settings
 				foreach ($config->sensors as $s) {
 					foreach($sensors_configurations as $sensor_setting) {
-						print_r($sensor_setting);
+						error_log($sensor_setting);
+						//print_r($sensor_setting);
 						// Valid sensor setting found
 						if ($sensor_setting["setting_name"] == $s->setting) {
 							if ($s->value == "true" && $sensor_setting["setting_type"] == "boolean") {
@@ -711,6 +722,9 @@ class Researcher extends CI_Controller {
 			$valid_config = array();
 			if (sizeof($valid_sensors) > 0) {
 				$valid_config["sensors"] = $valid_sensors;
+			}
+			else{
+				error_log("No Sensors!");
 			}
 			if (sizeof($valid_plugins) > 0) {
 				$valid_config["plugins"] = $valid_plugins;

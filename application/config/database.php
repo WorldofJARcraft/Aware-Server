@@ -49,7 +49,7 @@ $active_group = 'aware_dashboard'; //don't change me
 $active_record = TRUE;
 
 //Dashboard database
-$db['aware_dashboard']['hostname'] = 'localhost';
+$db['aware_dashboard']['hostname'] = '127.0.0.1';
 $db['aware_dashboard']['port'] = '3306';
 $db['aware_dashboard']['username'] = 'aware';
 $db['aware_dashboard']['password'] = 'test';

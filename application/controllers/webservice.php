@@ -500,25 +500,30 @@ class Webservice extends CI_Controller {
 			// Get all study devices
 			$study_devices = $this->Researcher_model->get_device_data($study_db, "", "", "", "", "4294967295");
 
-			// Get MQTT server details
+	//try{		// Get MQTT server details
 			$mqtt_conf = $this->_get_mqtt_server_details($study_id);
 
 			// Using Mosquitto-PHP client that we installed over PECL
-            $client = new Mosquitto\Client("aware", true);
-            $client->setTlsCertificates($this->config->item("public_keys")."server.crt"); //load server SSL certificate
-            $client->setTlsOptions(Mosquitto\Client::SSL_VERIFY_PEER, "tlsv1.2", NULL); //make sure client is using our server certificate to connect
-            $client->setCredentials($mqtt_conf['mqtt_username'], $mqtt_conf['mqtt_password']); //load study-specific user credentials so we can connect
-            $client->connect($mqtt_conf['mqtt_server'], $mqtt_conf['mqtt_port']); //make connection
+            //$client = new Mosquitto\Client("aware", true);
+            //$client->setTlsCertificates($this->config->item("public_keys")."server.crt"); //load server SSL certificate
+            //$client->setTlsOptions(Mosquitto\Client::SSL_VERIFY_PEER, "tlsv1.2", NULL); //make sure client is using our server certificate to connect
+            //$client->setCredentials($mqtt_conf['mqtt_username'], $mqtt_conf['mqtt_password']); //load study-specific user credentials so we can connect
+            //$client->connect($mqtt_conf['mqtt_server'], $mqtt_conf['mqtt_port']); //make connection
             
 			// Loop through devices and send message
-			foreach	($study_devices as $device) {
-				if (array_key_exists("device_id", $device)) {
-					$client->publish($study_id . "/" . $device["device_id"] . "/configuration", $config, 1, false);
-					$client->loop();
-                	sleep(1);
-				}
-			}
-			$client->disconnect();
+	//		foreach	($study_devices as $device) {
+	//			if (array_key_exists("device_id", $device)) {
+	//				$client->publish($study_id . "/" . $device["device_id"] . "/configuration", $config, 1, false);
+	//				$client->loop();
+          //      	sleep(1);
+	//			}
+	//		}
+	//		$client->disconnect();
+	//}
+	//catch(Exception $e){
+	//	error_log("Exception!");
+	//	error_log($e -> getMessage());	
+	//}
 			
 		} else {
 			header('HTTP/1.0 401 Unauthorized');
