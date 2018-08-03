@@ -1,4 +1,4 @@
-e<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Researcher_model extends CI_Model {
 	function __construct(){
@@ -114,7 +114,7 @@ class Researcher_model extends CI_Model {
 		// Insert study details into aware database
 		$this->db->insert('studies', $data);
 		$link = mysqli_connect($aware_db -> hostname, $aware_db -> username, $aware_db -> password, $aware_db -> database);
- 
+
 		// Check connection
 		if($link === false){
     			error_log("ERROR: Could not connect. " . mysqli_connect_error());
@@ -130,9 +130,6 @@ class Researcher_model extends CI_Model {
 		} else{
 		    error_log( "ERROR: Could not able to execute $sql. " . mysqli_error($link));
 		}
- 
-		// Close connection
-		mysqli_close($link);
 		// Get study ID so we can create a database
 		$this->db->select("MAX(id) as id");
 		$this->db->from("studies");
