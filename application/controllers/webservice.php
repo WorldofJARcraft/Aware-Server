@@ -17,8 +17,8 @@ class Webservice extends CI_Controller {
 		
 	//--- AWARE Client ---
 	public function index( $study_id = '', $api_key = '', $table = '', $operation = '' ) {		
-		
-		$this->output->set_header('Content-Type: text/html; charset=UTF-8');
+		error_log("Hello client!");
+		$this -> output -> set_header('Content-Type: text/html; charset=UTF-8');
 		
 		if ( strlen($study_id) == 0 ) {
 			$error = array('message'=>'The study ID is invalid.');
@@ -137,6 +137,8 @@ class Webservice extends CI_Controller {
 					$this->Aware_model->insert( $study_db, $table );
 				break;
 				case 'create_table':
+					error_log("Creating table!");
+					error_log($table);
 					$this->Aware_model->create_table( $study_db, $table );
 				break;
 				case 'clear_table':
