@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+e<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Researcher_model extends CI_Model {
 	function __construct(){
@@ -87,7 +87,6 @@ class Researcher_model extends CI_Model {
 
 		// Load default database
 		$aware_db = $this->load->database('aware_dashboard', TRUE);
-		echo $aware_db;
 		// Clean lastname
 		$lastname = str_replace(' ', '-', $this->session->userdata('last_name')); // Replaces all spaces with hyphens.
 		$lastname = preg_replace('/[^A-Za-z0-9\-]/', '', $lastname); // Removes special chars.
@@ -106,28 +105,45 @@ class Researcher_model extends CI_Model {
 			'db_username' => 'username',
 			'db_password' => 'password',
 		);
-
+		error_log("Datenbankinformationen:");
+		error_log($aware_db -> database);
+		error_log($aware_db -> hostname);
+		error_log($aware_db -> port);
+		error_log($aware_db -> username);
+		error_log($aware_db -> password);
 		// Insert study details into aware database
 		$this->db->insert('studies', $data);
-
+		$link = mysqli_connect($aware_db -> hostname, $aware_db -> username, $aware_db -> password, $aware_db -> database);
+ 
+		// Check connection
+		if($link === false){
+    			error_log("ERROR: Could not connect. " . mysqli_connect_error());
+		}
+ 		else{
+			error_log("Connection established.");
+		}
+		// Attempt insert query execution
+		$sqlins = "INSERT INTO `studies` (`id`, `description`, `status`, `db_name`, `study_name`, `creator_id`, `created`, `api_key`, `mqtt_password`, `db_hostname`, `db_port`, `db_username`, `db_password`) VALUES (NULL, '".$study_description."', '1', 'db_name', '".$study_name."', '".$user_id."', '".time()."', '".random_string('alnum',12)."', '".$mqtt_mcrypt."', '".$database -> hostname."', '".$database -> port."', 'username', 'password');";
+		error_log($sqlins);
+		if(mysqli_query($link, $sqlins)){
+    			error_log ("Records inserted successfully.");
+		} else{
+		    error_log( "ERROR: Could not able to execute $sql. " . mysqli_error($link));
+		}
+ 
+		// Close connection
+		mysqli_close($link);
 		// Get study ID so we can create a database
 		$this->db->select("MAX(id) as id");
 		$this->db->from("studies");
 		$this->db->where("creator_id", $user_id);
 		$query = $this->db->get();
-
 		$row = $query->row();
 		$study_id = $row->id;
-
-		error_log("Study ID:",0);
-		error_log($study_id,0);
-
+		error_log("ID:".$study_id);
 		// If we're using default database, use database name forming: surname + _study_id
 		if ($database->hostname == $this->load->database('aware_dashboard', TRUE)->hostname) {
-			error_log("create study db with surname and study id", 0);
 			$db_name = $lastname . "_" . $study_id;
-			echo $db_name;
-			error_log($db_name,0);
 			$database->database = $db_name;
 			// Create database
 			$this->dbforge->create_database($db_name);
@@ -143,6 +159,15 @@ class Researcher_model extends CI_Model {
 			// Update username & password
 			$this->db->where('id', $study_id);
 			$this->db->update('studies', array('db_username' => $db_name, 'db_password' => $this->encrypt->encode($new_password)));
+			//Fix for no edit possible
+			$sqlins2 = "INSERT INTO `studies_configurations` (`id`, `study_id`, `config`, `edited`) VALUES (NULL, '".$study_id."', '[]', '0');";
+			error_log($sqlins2);
+			if(mysqli_query($link, $sqlins2)){
+				error_log("Config created!");
+			}
+			else{
+				error_log("Error: ".mysqli_error($link));
+			}
 		// Using external db, let user choose db name
 		} else {
 			$db_name = $database->database;
@@ -151,7 +176,8 @@ class Researcher_model extends CI_Model {
 			$this->db->where('id', $study_id);
 			$this->db->update('studies', array('db_username' => $database->username, 'db_password' => $this->encrypt->encode($database->password)));
 		}
-
+		//close connection
+		mysqli_close($link);
 		// Update db_name
 		$this->db->where('id', $study_id);
 		$this->db->update('studies', array('db_name' => $db_name));
@@ -332,8 +358,18 @@ class Researcher_model extends CI_Model {
 	}
 
 	function update_study_config($study_id, $config) {
+		error_log("Konfigwechsel:");
+		error_log($this -> db -> hostname);
+		error_log($this -> db -> database);
+		error_log($this -> db -> username);
+		error_log($this -> db -> password);
 		$this->db->where('study_id', $study_id);
 		$this->db->update('studies_configurations', array('config' => $config, 'edited' => time()));
+		foreach ($config as &$val){
+			error_log($val);
+		}
+		unset($val);
+		error_log(var_dump($config));
 		return $this->db->affected_rows();
 	}
 
@@ -477,7 +513,7 @@ class Researcher_model extends CI_Model {
 		$database->from($database->database.'.aware_device');
 		if (strlen($device_search) > 0) {
 			$database->or_like(array('aware_device.device_id' => $device_search, 'aware_device.label' => $device_search));
-			$database->limit($limit, 0);
+			$database->limit($limit, -4);
 		} else {
 			$database->limit($limit, $offset);
 		}
